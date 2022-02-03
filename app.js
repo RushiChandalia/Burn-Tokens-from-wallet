@@ -10,7 +10,9 @@ const MyAccount = Keypair.fromSecretKey(secretKey);
 
 const BurnMyNfts = async () => {
   var AllNFTsData = await fetchNFTs(MyAccount, connection);
+  console.log("Burning process started!!");
   console.log("Number of NFTs to be Burned: ", AllNFTsData.length);
+  console.log("-----------------------------");
   for (const t of AllNFTsData) {
     console.log("Token Account: ", t.pubkey.toBase58());
     console.log("Assosiated Mint Address: ", t.account.data.parsed.info.mint);
@@ -28,10 +30,13 @@ const BurnMyNfts = async () => {
       });
       await connection.confirmTransaction(stx, "confirmed");
       console.log("NFT burnt and Token Account closed successfully!!");
+      console.log("-----------------------------");
     } catch (err) {
       console.log(err.message);
     }
   }
+  console.log("-----------------------------");
+  console.log("Process completed successfully!");
 };
 
 BurnMyNfts();
