@@ -17,6 +17,7 @@
     "chalk": "^4.1.2",
     "dotenv": "^16.0.0",
     "inquirer": "^8.2.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "simple-node-logger": "^21.8.12"
   }
 }

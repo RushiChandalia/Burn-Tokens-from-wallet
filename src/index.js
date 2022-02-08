@@ -1,6 +1,12 @@
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 const dotenv = require("dotenv");
+const SimpleNodeLogger = require("simple-node-logger"),
+  opts = {
+    logFilePath: "mylogfile.log",
+    timestampFormat: "YYYY-MM-DD HH:mm:ss.SSS",
+  },
+  logger = SimpleNodeLogger.createSimpleLogger(opts);
 const { Connection, Keypair, PublicKey } = require("@solana/web3.js");
 const { fetchNFTs } = require("../utils/Fetch/fetchAllNFTs");
 const { fetchEmptyTA } = require("../utils/Fetch/fetchEmptyTokenAccounts");
@@ -75,10 +81,49 @@ const iterate = async (TokenAccountData, choice) => {
                 skipPreflight: false,
               }
             );
-            await connection.confirmTransaction(stx, "confirmed");
-            log(chalk.yellow("Transaction was confirmed!"));
+            try {
+              await connection.confirmTransaction(stx, "confirmed");
+              log(chalk.yellow("Transaction was confirmed!"));
+              logger.info(
+                "Token Account ",
+                t.pubkey.toBase58(),
+                "--",
+                "Mint Address ",
+                t.account.data.parsed.info.mint,
+                "--",
+                "Transaction ID ",
+                stx,
+                "Status ",
+                "Confirmed"
+              );
+            } catch (error) {
+              logger.info(
+                "Token Account ",
+                t.pubkey.toBase58(),
+                "--",
+                "Mint Address ",
+                t.account.data.parsed.info.mint,
+                "--",
+                "Transaction ID ",
+                stx,
+                "Status ",
+                "Unconfirmed"
+              );
+            }
           } catch (err) {
             log(chalk.red(err.message));
+            logger.info(
+              "Token Account ",
+              t.pubkey.toBase58(),
+              "--",
+              "Mint Address ",
+              t.account.data.parsed.info.mint,
+              "--",
+              "Transaction ID ",
+              stx,
+              "Status ",
+              "failed"
+            );
           }
           log("\n");
         }
